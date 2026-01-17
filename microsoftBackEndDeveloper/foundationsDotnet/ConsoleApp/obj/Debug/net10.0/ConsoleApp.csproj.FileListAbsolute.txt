@@ -1,0 +1,15 @@
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\bin\Debug\net10.0\ConsoleApp.exe
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\bin\Debug\net10.0\ConsoleApp.deps.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\bin\Debug\net10.0\ConsoleApp.runtimeconfig.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\bin\Debug\net10.0\ConsoleApp.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\bin\Debug\net10.0\ConsoleApp.pdb
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\obj\Debug\net10.0\ConsoleApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\obj\Debug\net10.0\ConsoleApp.AssemblyInfoInputs.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\obj\Debug\net10.0\ConsoleApp.AssemblyInfo.cs
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\obj\Debug\net10.0\ConsoleApp.csproj.CoreCompileInputs.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\obj\Debug\net10.0\ConsoleApp.sourcelink.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\obj\Debug\net10.0\ConsoleApp.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\obj\Debug\net10.0\refint\ConsoleApp.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\obj\Debug\net10.0\ConsoleApp.pdb
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\obj\Debug\net10.0\ConsoleApp.genruntimeconfig.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\ConsoleApp\obj\Debug\net10.0\ref\ConsoleApp.dll
