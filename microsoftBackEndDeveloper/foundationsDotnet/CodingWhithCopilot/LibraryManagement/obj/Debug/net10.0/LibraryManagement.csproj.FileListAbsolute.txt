@@ -1,0 +1,15 @@
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\bin\Debug\net10.0\LibraryManagement.exe
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\bin\Debug\net10.0\LibraryManagement.deps.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\bin\Debug\net10.0\LibraryManagement.runtimeconfig.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\bin\Debug\net10.0\LibraryManagement.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\bin\Debug\net10.0\LibraryManagement.pdb
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\obj\Debug\net10.0\LibraryManagement.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\obj\Debug\net10.0\LibraryManagement.AssemblyInfoInputs.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\obj\Debug\net10.0\LibraryManagement.AssemblyInfo.cs
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\obj\Debug\net10.0\LibraryManagement.csproj.CoreCompileInputs.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\obj\Debug\net10.0\LibraryManagement.sourcelink.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\obj\Debug\net10.0\LibraryManagement.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\obj\Debug\net10.0\refint\LibraryManagement.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\obj\Debug\net10.0\LibraryManagement.pdb
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\obj\Debug\net10.0\LibraryManagement.genruntimeconfig.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\foundationsDotnet\CodingWhithCopilot\LibraryManagement\obj\Debug\net10.0\ref\LibraryManagement.dll
