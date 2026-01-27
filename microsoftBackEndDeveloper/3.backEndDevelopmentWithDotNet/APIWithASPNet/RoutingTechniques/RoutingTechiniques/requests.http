@@ -1,0 +1,16 @@
+GET http://localhost:5056/users/1/posts/some-text
+###
+
+GET http://localhost:5056/products/1
+###
+
+GET http://localhost:5056/report/
+###
+
+GET http://localhost:5056/files/klhgkjnfg
+###
+
+GET http://localhost:5056/search?query=something&page=2
+###
+
+GET http://localhost:5056/store/electronics/1/smartphones

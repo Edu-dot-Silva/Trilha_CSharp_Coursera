@@ -1,0 +1,28 @@
+GET http://localhost:5037/
+###
+
+GET http://localhost:5037/blogs
+###
+
+GET http://localhost:5037/blogs/1
+###
+
+POST http://localhost:5037/blogs
+Content-Type: application/json
+
+{
+  "title": "Blog Post Request",
+  "body": "This is the content of my Blog Post Request"
+}
+###
+
+DELETE http://localhost:5037/blogs/1
+###
+
+PUT http://localhost:5037/blogs/1
+Content-Type: application/json
+
+{
+  "title": "Updated Blog Post",
+  "body": "This is the updated content of my Blog Post Request"
+}
