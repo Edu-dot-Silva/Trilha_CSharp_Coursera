@@ -1,0 +1,12 @@
+GET http://localhost:5078/
+###
+GET http://localhost:5078/manual-json
+###
+GET http://localhost:5078/custom-serializer
+###
+GET http://localhost:5078/json
+###
+GET http://localhost:5078/auto
+###
+GET http://localhost:5078/xml
+###

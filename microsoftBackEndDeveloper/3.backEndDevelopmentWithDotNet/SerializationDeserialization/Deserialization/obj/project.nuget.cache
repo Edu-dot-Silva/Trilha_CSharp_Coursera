@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "4r6cAdaPm0E=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\eduardo.silva\\Downloads\\Trilha_CSharp_Coursera\\microsoftBackEndDeveloper\\3.backEndDevelopmentWithDotNet\\SerializationDeserialization\\Deserialization\\Deserialization.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.11\\microsoft.aspnetcore.openapi.9.0.11.nupkg.sha512",
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
