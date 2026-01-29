@@ -1,0 +1,26 @@
+POST http://localhost:5074/auto
+Content-Type: application/json
+
+{"UserName":"JohnDoe","UserAge":30}
+
+###
+POST http://localhost:5074/json
+Content-Type: application/json
+
+{"UserName":"JaneDoe","UserAge":25}
+###
+
+POST http://localhost:5074/json
+Content-Type: application/json
+
+{"UserName":"JaneDoe2","UserAge":47}
+###
+
+POST http://localhost:5074/auto
+Content-Type: application/xml
+
+<Person>
+    <UserName>JaneDoe2</UserName>
+    <UserAge>47</UserAge>
+</Person>
+###
