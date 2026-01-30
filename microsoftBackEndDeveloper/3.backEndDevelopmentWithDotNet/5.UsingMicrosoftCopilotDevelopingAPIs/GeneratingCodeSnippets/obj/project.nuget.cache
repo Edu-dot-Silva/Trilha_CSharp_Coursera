@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "rNdmo7vUVHg=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\eduardo.silva\\Downloads\\Trilha_CSharp_Coursera\\microsoftBackEndDeveloper\\3.backEndDevelopmentWithDotNet\\5.UsingMicrosoftCopilotDevelopingAPIs\\GeneratingCodeSnippets\\GeneratingCodeSnippets.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.2\\microsoft.aspnetcore.openapi.10.0.2.nupkg.sha512",
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\microsoft.extensions.apidescription.server\\10.0.0\\microsoft.extensions.apidescription.server.10.0.0.nupkg.sha512",
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\microsoft.openapi\\2.3.0\\microsoft.openapi.2.3.0.nupkg.sha512",
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\swashbuckle.aspnetcore\\10.1.0\\swashbuckle.aspnetcore.10.1.0.nupkg.sha512",
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\10.1.0\\swashbuckle.aspnetcore.swagger.10.1.0.nupkg.sha512",
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\10.1.0\\swashbuckle.aspnetcore.swaggergen.10.1.0.nupkg.sha512",
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\10.1.0\\swashbuckle.aspnetcore.swaggerui.10.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}

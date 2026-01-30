@@ -1,0 +1,26 @@
+### GET all
+GET http://localhost:5066/api/todo
+
+### GET by id
+GET http://localhost:5066/api/todo/1
+
+### POST create
+POST http://localhost:5066/api/todo
+Content-Type: application/json
+
+{
+  "name": "Estudar Javascript",
+  "isComplete": false
+}
+
+### PUT update
+PUT http://localhost:5066/api/todo/1
+Content-Type: application/json
+
+{
+  "name": "Estudar ASP.NET Core",
+  "isComplete": true
+}
+
+### DELETE
+DELETE http://localhost:5066/api/todo/1

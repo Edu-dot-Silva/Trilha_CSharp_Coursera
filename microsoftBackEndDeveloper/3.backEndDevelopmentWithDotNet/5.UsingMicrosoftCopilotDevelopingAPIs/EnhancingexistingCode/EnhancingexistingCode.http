@@ -1,0 +1,6 @@
+@EnhancingexistingCode_HostAddress = http://localhost:5274
+
+GET {{EnhancingexistingCode_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
