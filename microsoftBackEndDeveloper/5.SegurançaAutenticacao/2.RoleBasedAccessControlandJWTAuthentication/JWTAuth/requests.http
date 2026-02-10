@@ -1,0 +1,11 @@
+GET http://localhost:5016/
+###
+GET http://localhost:5016/secure
+Authorization: Bearer JWT_TOKEN_HERE
+###    
+GET http://localhost:5291/admin-role
+Authorization: Bearer JWT_TOKEN_HERE_WITH_ADMIN_ROLE_ON_PAYLOAD
+###    
+GET http://localhost:5016/it-claim
+Authorization: Bearer JWT_TOKEN_HERE_WITH_IT_CLAIM_ON_PAYLOAD
+###    
