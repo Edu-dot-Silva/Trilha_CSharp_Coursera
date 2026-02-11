@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "rrHyRFbni8E=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\eduardo.silva\\Downloads\\Trilha_CSharp_Coursera\\microsoftBackEndDeveloper\\5.SegurançaAutenticacao\\3.DataProtection\\Encryption\\Encryption.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.3\\microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
+    "C:\\Users\\eduardo.silva\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,9 @@
+C:\Users\eduardo.silva\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\5.SegurançaAutenticacao\3.DataProtection\DataAtRest\obj\Debug\net10.0\DataAtRest.csproj.AssemblyReference.cache
+C:\Users\eduardo.silva\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\5.SegurançaAutenticacao\3.DataProtection\DataAtRest\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\eduardo.silva\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\5.SegurançaAutenticacao\3.DataProtection\DataAtRest\obj\Debug\net10.0\DataAtRest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\eduardo.silva\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\5.SegurançaAutenticacao\3.DataProtection\DataAtRest\obj\Debug\net10.0\DataAtRest.AssemblyInfoInputs.cache
+C:\Users\eduardo.silva\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\5.SegurançaAutenticacao\3.DataProtection\DataAtRest\obj\Debug\net10.0\DataAtRest.AssemblyInfo.cs
+C:\Users\eduardo.silva\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\5.SegurançaAutenticacao\3.DataProtection\DataAtRest\obj\Debug\net10.0\DataAtRest.csproj.CoreCompileInputs.cache
+C:\Users\eduardo.silva\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\5.SegurançaAutenticacao\3.DataProtection\DataAtRest\obj\Debug\net10.0\DataAtRest.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\eduardo.silva\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\5.SegurançaAutenticacao\3.DataProtection\DataAtRest\obj\Debug\net10.0\DataAtRest.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\eduardo.silva\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\5.SegurançaAutenticacao\3.DataProtection\DataAtRest\obj\Debug\net10.0\DataAtRest.sourcelink.json
