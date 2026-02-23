@@ -1,0 +1,15 @@
+### Encrypt
+POST http://localhost:5042/encrypt
+Content-Type: application/json
+
+{
+    "PlainText": "Encrypt Text"
+}
+
+### Decrypt
+POST http://localhost:5042/decrypt
+Content-Type: application/json
+
+{
+    "CipherText": "sYPXsZUeG0q6ca6Zo6rZEQ=="
+}
