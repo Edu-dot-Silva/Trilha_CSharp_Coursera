@@ -1,0 +1,15 @@
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\bin\Debug\net10.0\CardSortGame.exe
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\bin\Debug\net10.0\CardSortGame.deps.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\bin\Debug\net10.0\CardSortGame.runtimeconfig.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\bin\Debug\net10.0\CardSortGame.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\bin\Debug\net10.0\CardSortGame.pdb
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\obj\Debug\net10.0\CardSortGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\obj\Debug\net10.0\CardSortGame.AssemblyInfoInputs.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\obj\Debug\net10.0\CardSortGame.AssemblyInfo.cs
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\obj\Debug\net10.0\CardSortGame.csproj.CoreCompileInputs.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\obj\Debug\net10.0\CardSortGame.sourcelink.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\obj\Debug\net10.0\CardSortGame.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\obj\Debug\net10.0\refint\CardSortGame.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\obj\Debug\net10.0\CardSortGame.pdb
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\obj\Debug\net10.0\CardSortGame.genruntimeconfig.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\CardSortGame\obj\Debug\net10.0\ref\CardSortGame.dll

@@ -1,0 +1,15 @@
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\bin\Debug\net10.0\StackQueueDemo.exe
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\bin\Debug\net10.0\StackQueueDemo.deps.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\bin\Debug\net10.0\StackQueueDemo.runtimeconfig.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\bin\Debug\net10.0\StackQueueDemo.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\bin\Debug\net10.0\StackQueueDemo.pdb
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\obj\Debug\net10.0\StackQueueDemo.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\obj\Debug\net10.0\StackQueueDemo.AssemblyInfoInputs.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\obj\Debug\net10.0\StackQueueDemo.AssemblyInfo.cs
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\obj\Debug\net10.0\StackQueueDemo.csproj.CoreCompileInputs.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\obj\Debug\net10.0\StackQueueDemo.sourcelink.json
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\obj\Debug\net10.0\StackQueueDemo.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\obj\Debug\net10.0\refint\StackQueueDemo.dll
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\obj\Debug\net10.0\StackQueueDemo.pdb
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\obj\Debug\net10.0\StackQueueDemo.genruntimeconfig.cache
+C:\Users\Eduardo\Downloads\Trilha_CSharp_Coursera\microsoftBackEndDeveloper\7.DataStructuresandAlgorithms\Introduction\StackQueueDemo\obj\Debug\net10.0\ref\StackQueueDemo.dll
