@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Professional portfolio showcasing web development projects, skills, and experience. A full-stack developer portfolio with projects in HTML, CSS, and JavaScript.">
+    <meta name="keywords" content="portfolio, web developer, full-stack, HTML, CSS, JavaScript">
+    <meta name="author" content="Eduardo">
+    <title>Eduardo - Full Stack Developer Portfolio</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+    <!-- Header Section with Navigation -->
+    <header role="banner">
+        <nav role="navigation" aria-label="Main navigation">
+            <div class="nav-container">
+                <h1 class="logo">Eduardo Dev</h1>
+                <ul class="nav-links">
+                    <li><a href="#about-me" tabindex="0">About Me</a></li>
+                    <li><a href="#projects" tabindex="0">Projects</a></li>
+                    <li><a href="#skills" tabindex="0">Skills</a></li>
+                    <li><a href="#contact" tabindex="0">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" aria-label="Hero section">
+            <h1>Welcome to My Portfolio</h1>
+            <p>Full Stack Developer | Problem Solver | Continuous Learner</p>
+        </section>
+
+        <!-- About Me Section -->
+        <section id="about-me" aria-labelledby="about-heading">
+            <h2 id="about-heading">About Me</h2>
+            <p>
+                I am a passionate full-stack developer with experience in building responsive web applications 
+                and scalable backend systems. I have a strong foundation in HTML, CSS, and JavaScript, with expertise 
+                in modern frameworks and tools. I'm committed to writing clean, accessible, and maintainable code that 
+                provides excellent user experiences.
+            </p>
+            <p>
+                As a lifelong learner, I continuously explore new technologies and best practices in web development. 
+                I believe in leveraging tools like Microsoft Copilot to enhance productivity and code quality while 
+                maintaining strong fundamental programming knowledge.
+            </p>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" aria-labelledby="projects-heading">
+            <h2 id="projects-heading">Featured Projects</h2>
+            <div class="projects-container">
+                <!-- Project 1 -->
+                <article class="project-card">
+                    <figure>
+                        <img 
+                            src="images/project-1-thumbnail.png" 
+                            alt="Screenshot of E-Commerce Platform project showing product listing interface with filters and shopping cart"
+                            class="project-image"
+                        >
+                        <figcaption>E-Commerce Platform</figcaption>
+                    </figure>
+                    <h3>E-Commerce Platform</h3>
+                    <p>
+                        A fully functional e-commerce website built with HTML, CSS, and JavaScript. 
+                        Features include product filtering, shopping cart functionality, and checkout process.
+                    </p>
+                    <ul>
+                        <li>Responsive design</li>
+                        <li>JavaScript DOM manipulation</li>
+                        <li>Local storage integration</li>
+                    </ul>
+                    <a href="projects/ecommerce.html" class="btn btn-primary" tabindex="0">View Project</a>
+                </article>
+
+                <!-- Project 2 -->
+                <article class="project-card">
+                    <figure>
+                        <img 
+                            src="images/project-2-thumbnail.png" 
+                            alt="Screenshot of Task Management App showing a to-do list with add, edit, and delete features"
+                            class="project-image"
+                        >
+                        <figcaption>Task Management App</figcaption>
+                    </figure>
+                    <h3>Task Management App</h3>
+                    <p>
+                        A productivity tool that helps users organize and track their tasks. 
+                        Built with vanilla JavaScript and featuring a clean, intuitive interface.
+                    </p>
+                    <ul>
+                        <li>Add, edit, and delete tasks</li>
+                        <li>Task prioritization</li>
+                        <li>Persistent data storage</li>
+                    </ul>
+                    <a href="projects/taskmanager.html" class="btn btn-primary" tabindex="0">View Project</a>
+                </article>
+
+                <!-- Project 3 -->
+                <article class="project-card">
+                    <figure>
+                        <img 
+                            src="images/project-3-thumbnail.png" 
+                            alt="Screenshot of Weather Dashboard showing current weather conditions and 5-day forecast for multiple cities"
+                            class="project-image"
+                        >
+                        <figcaption>Weather Dashboard</figcaption>
+                    </figure>
+                    <h3>Weather Dashboard</h3>
+                    <p>
+                        A weather application that fetches real-time data from a public API. 
+                        Users can search for locations and view detailed weather forecasts.
+                    </p>
+                    <ul>
+                        <li>API integration</li>
+                        <li>Real-time data fetching</li>
+                        <li>Search functionality</li>
+                    </ul>
+                    <a href="projects/weather.html" class="btn btn-primary" tabindex="0">View Project</a>
+                </article>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" aria-labelledby="skills-heading">
+            <h2 id="skills-heading">Technical Skills</h2>
+            <div class="skills-container">
+                <!-- Frontend Skills -->
+                <div class="skill-category">
+                    <h3>Frontend Development</h3>
+                    <ul class="skills-list">
+                        <li>HTML5</li>
+                        <li>CSS3 & Responsive Design</li>
+                        <li>JavaScript (ES6+)</li>
+                        <li>DOM Manipulation</li>
+                        <li>Accessibility (WCAG)</li>
+                        <li>Web Performance Optimization</li>
+                    </ul>
+                </div>
+
+                <!-- Backend Skills -->
+                <div class="skill-category">
+                    <h3>Backend Development</h3>
+                    <ul class="skills-list">
+                        <li>C# & .NET Framework</li>
+                        <li>ASP.NET Core</li>
+                        <li>RESTful APIs</li>
+                        <li>Database Design (SQL)</li>
+                        <li>Authentication & Authorization</li>
+                        <li>Entity Framework</li>
+                    </ul>
+                </div>
+
+                <!-- Tools & Technologies -->
+                <div class="skill-category">
+                    <h3>Tools & Technologies</h3>
+                    <ul class="skills-list">
+                        <li>Visual Studio Code</li>
+                        <li>Git & GitHub</li>
+                        <li>Visual Studio</li>
+                        <li>Microsoft Copilot</li>
+                        <li>REST Client Tools</li>
+                        <li>Browser DevTools</li>
+                    </ul>
+                </div>
+
+                <!-- Soft Skills -->
+                <div class="skill-category">
+                    <h3>Professional Skills</h3>
+                    <ul class="skills-list">
+                        <li>Problem Solving</li>
+                        <li>Code Documentation</li>
+                        <li>Team Collaboration</li>
+                        <li>Version Control</li>
+                        <li>Continuous Learning</li>
+                        <li>Code Review & Best Practices</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" aria-labelledby="contact-heading">
+            <h2 id="contact-heading">Get In Touch</h2>
+            <p>
+                I'm always interested in hearing about new projects and opportunities. 
+                Feel free to reach out using the form below or through my social media channels.
+            </p>
+
+            <form class="contact-form" action="#" method="POST" aria-label="Contact form">
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="name">Full Name <span aria-label="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        required 
+                        aria-required="true"
+                        aria-describedby="name-help"
+                        placeholder="Your full name"
+                        tabindex="0"
+                    >
+                    <small id="name-help">Please enter your full name</small>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email">Email Address <span aria-label="required">*</span></label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        aria-required="true"
+                        aria-describedby="email-help"
+                        placeholder="your.email@example.com"
+                        tabindex="0"
+                    >
+                    <small id="email-help">We'll never share your email with anyone else</small>
+                </div>
+
+                <!-- Subject Field -->
+                <div class="form-group">
+                    <label for="subject">Subject <span aria-label="required">*</span></label>
+                    <input 
+                        type="text" 
+                        id="subject" 
+                        name="subject" 
+                        required 
+                        aria-required="true"
+                        placeholder="What is this about?"
+                        tabindex="0"
+                    >
+                </div>
+
+                <!-- Message Field -->
+                <div class="form-group">
+                    <label for="message">Message <span aria-label="required">*</span></label>
+                    <textarea 
+                        id="message" 
+                        name="message" 
+                        rows="6" 
+                        required 
+                        aria-required="true"
+                        aria-describedby="message-help"
+                        placeholder="Your message here..."
+                        tabindex="0"
+                    ></textarea>
+                    <small id="message-help">Please provide details about your inquiry</small>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary btn-submit" tabindex="0">
+                    Send Message
+                </button>
+                <button type="reset" class="btn btn-secondary" tabindex="0">
+                    Clear Form
+                </button>
+            </form>
+
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <h3>Other Ways to Connect</h3>
+                <ul>
+                    <li>
+                        <strong>Email:</strong> 
+                        <a href="mailto:your.email@example.com" tabindex="0">your.email@example.com</a>
+                    </li>
+                    <li>
+                        <strong>GitHub:</strong> 
+                        <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" tabindex="0">github.com/yourusername</a>
+                    </li>
+                    <li>
+                        <strong>LinkedIn:</strong> 
+                        <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" tabindex="0">linkedin.com/in/yourusername</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; 2026 Eduardo - Full Stack Developer. All rights reserved.</p>
+            <nav aria-label="Footer navigation">
+                <ul class="footer-links">
+                    <li><a href="#top" tabindex="0">Back to Top</a></li>
+                    <li><a href="#about-me" tabindex="0">About</a></li>
+                    <li><a href="#projects" tabindex="0">Projects</a></li>
+                    <li><a href="#skills" tabindex="0">Skills</a></li>
+                    <li><a href="#contact" tabindex="0">Contact</a></li>
+                </ul>
+            </nav>
+            <p>Built with semantic HTML, accessibility, and SEO best practices in mind.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for interactivity -->
+    <script src="js/script.js"></script>
+</body>
+</html>
