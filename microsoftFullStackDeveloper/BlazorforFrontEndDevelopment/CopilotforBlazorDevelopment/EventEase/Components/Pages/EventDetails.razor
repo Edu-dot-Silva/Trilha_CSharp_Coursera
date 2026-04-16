@@ -1,0 +1,186 @@
+@page "/event/{EventId:int}"
+@using EventEase.Models
+@using EventEase.Services
+@inject NavigationManager Navigation
+@inject EventDataService EventService
+@inject SessionStateService SessionService
+
+<div class="event-details-container">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-container">
+            <div class="error-message">
+                <p>⚠️ @errorMessage</p>
+                <button class="btn btn-primary" @onclick="GoBack">← Back to Events</button>
+            </div>
+        </div>
+    }
+    else if (selectedEvent != null && selectedEvent.IsValid())
+    {
+        <div class="details-header">
+            <button class="btn btn-back" @onclick="GoBack">← Back to Events</button>
+            <h1>@selectedEvent.EventName</h1>
+        </div>
+
+        <div class="details-content">
+            <div class="main-info">
+                <div class="info-section">
+                    <h3>Event Information</h3>
+                    <p>@(string.IsNullOrEmpty(selectedEvent.Description) ? "No description available" : selectedEvent.Description)</p>
+                </div>
+
+                <div class="info-section">
+                    <h3>Details</h3>
+                    <div class="detail-row">
+                        <span class="label">📅 Date & Time:</span>
+                        <span class="value">@FormatDateTime(selectedEvent.EventDate)</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">📍 Location:</span>
+                        <span class="value">@(string.IsNullOrEmpty(selectedEvent.Location) ? "TBD" : selectedEvent.Location)</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">📁 Category:</span>
+                        <span class="value">@(string.IsNullOrEmpty(selectedEvent.Category) ? "General" : selectedEvent.Category)</span>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3>Attendance Status</h3>
+                    <div class="attendance-bar">
+                        <div class="progress-fill" style="width: @(GetAttendancePercentage())%"></div>
+                        <span class="attendance-text">@selectedEvent.RegisteredAttendees / @selectedEvent.MaxAttendees registered</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="registration-panel">
+                    <h3>Registration</h3>
+                    @{
+                        var isUserRegistered = SessionService.CurrentSession?.IsRegisteredForEvent(EventId) ?? false;
+                    }
+                    @if (isUserRegistered)
+                    {
+                        <p class="status registered">✓ You are registered for this event</p>
+                        <button class="btn btn-secondary" disabled>Already Registered</button>
+                    }
+                    else if (selectedEvent?.IsAvailable ?? false)
+                    {
+                        <p class="status available">✓ Seats Available</p>
+                        <button class="btn btn-primary btn-large" @onclick="HandleRegister">Register Now</button>
+                    }
+                    else
+                    {
+                        <p class="status full">Event is Full</p>
+                        <button class="btn btn-disabled" disabled>Registration Closed</button>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="loading-container">
+            <p>Loading event details...</p>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private Event? selectedEvent;
+    private string? errorMessage;
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            if (EventId <= 0)
+            {
+                errorMessage = "Invalid event ID provided.";
+                return;
+            }
+
+            selectedEvent = EventService.GetEventById(EventId);
+            
+            if (selectedEvent == null)
+            {
+                errorMessage = $"Event with ID {EventId} not found. Please check the URL or go back to the event list.";
+            }
+            else if (!selectedEvent.IsValid())
+            {
+                errorMessage = "Event data is invalid. Please try again or contact support.";
+                selectedEvent = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading event details: {ex.Message}";
+        }
+    }
+
+    private void HandleRegister()
+    {
+        try
+        {
+            if (selectedEvent == null)
+            {
+                errorMessage = "Cannot process registration. Event data unavailable.";
+                return;
+            }
+
+            if (!selectedEvent.IsAvailable)
+            {
+                errorMessage = "This event is now full and registration is closed.";
+                return;
+            }
+
+            Navigation.NavigateTo($"/register/{EventId}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error navigating to registration: {ex.Message}";
+        }
+    }
+
+    private void GoBack()
+    {
+        try
+        {
+            Navigation.NavigateTo("/events");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error navigating back: {ex.Message}";
+        }
+    }
+
+    private string FormatDateTime(DateTime date)
+    {
+        try
+        {
+            return date.ToString("dddd, MMMM dd, yyyy h:mm tt");
+        }
+        catch
+        {
+            return "Date not available";
+        }
+    }
+
+    private string GetAttendancePercentage()
+    {
+        try
+        {
+            if (selectedEvent == null || selectedEvent.MaxAttendees <= 0)
+                return "0";
+            return ((selectedEvent.RegisteredAttendees * 100) / selectedEvent.MaxAttendees).ToString();
+        }
+        catch
+        {
+            return "0";
+        }
+    }
+}

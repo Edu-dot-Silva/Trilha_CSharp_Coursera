@@ -1,0 +1,790 @@
+@page "/register/{EventId:int}"
+@using EventEase.Models
+@using EventEase.Services
+@using System.Text.RegularExpressions
+@inject NavigationManager Navigation
+@inject EventDataService EventService
+@inject SessionStateService SessionService
+@inject AttendanceTrackerService AttendanceService
+
+<div class="registration-container">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-container">
+            <div class="error-message">
+                <p>⚠️ @errorMessage</p>
+                <button class="btn btn-primary" @onclick="GoBack">← Go Back</button>
+            </div>
+        </div>
+    }
+    else if (selectedEvent != null && selectedEvent.IsValid())
+    {
+        <div class="registration-header">
+            <h1>Event Registration</h1>
+            <h2>@selectedEvent.EventName</h2>
+        </div>
+
+        <div class="registration-content">
+            @if (!isSubmitted)
+            {
+                <form @onsubmit="HandleSubmit">
+                    @if (validationErrors.Any())
+                    {
+                        <div class="error-summary">
+                            <h4>Please fix the following errors:</h4>
+                            <ul>
+                                @foreach (var error in validationErrors)
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    @if (SessionService.IsSessionActive && SessionService.CurrentSession != null)
+                    {
+                        <div class="form-section">
+                            <h3>Session Information</h3>
+                            <div class="session-info-display">
+                                <p><strong>Name:</strong> @SessionService.CurrentSession.UserName</p>
+                                <p><strong>Email:</strong> @SessionService.CurrentSession.Email</p>
+                                @if (!string.IsNullOrEmpty(SessionService.CurrentSession.Phone))
+                                {
+                                    <p><strong>Phone:</strong> @SessionService.CurrentSession.Phone</p>
+                                }
+                                @if (!string.IsNullOrEmpty(SessionService.CurrentSession.Company))
+                                {
+                                    <p><strong>Company:</strong> @SessionService.CurrentSession.Company</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-section">
+                            <h3>Your Information</h3>
+                            
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input type="text" 
+                                       id="firstName" 
+                                       class="form-input"
+                                       @bind="formData.FirstName"
+                                       @bind:event="oninput"
+                                       placeholder="Enter your first name"
+                                       required />
+                                <small class="form-hint">Required field</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input type="text" 
+                                       id="lastName" 
+                                       class="form-input"
+                                       @bind="formData.LastName"
+                                       @bind:event="oninput"
+                                       placeholder="Enter your last name"
+                                       required />
+                                <small class="form-hint">Required field</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" 
+                                       id="email" 
+                                       class="form-input"
+                                       @bind="formData.Email"
+                                       @bind:event="oninput"
+                                       placeholder="your.email@example.com"
+                                       required />
+                                <small class="form-hint">Must be a valid email address</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" 
+                                       id="phone" 
+                                       class="form-input"
+                                       @bind="formData.Phone"
+                                       @bind:event="oninput"
+                                       placeholder="(123) 456-7890" />
+                                <small class="form-hint">Optional, should be in format (XXX) XXX-XXXX</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="company">Company</label>
+                                <input type="text" 
+                                       id="company" 
+                                       class="form-input"
+                                       @bind="formData.Company"
+                                       @bind:event="oninput"
+                                       placeholder="Your company name" />
+                                <small class="form-hint">Optional</small>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="form-section">
+                        <h3>Event Details</h3>
+                        <div class="event-summary">
+                            <div class="summary-item">
+                                <span class="label">Event:</span>
+                                <span class="value">@selectedEvent.EventName</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Date:</span>
+                                <span class="value">@FormatDateTime(selectedEvent.EventDate)</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Location:</span>
+                                <span class="value">@selectedEvent.Location</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Available Seats:</span>
+                                <span class="value">@(selectedEvent.MaxAttendees - selectedEvent.RegisteredAttendees)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group checkbox">
+                        <input type="checkbox" 
+                               id="terms" 
+                               @bind="formData.AcceptTerms" 
+                               required />
+                        <label for="terms">I accept the terms and conditions *</label>
+                        <small class="form-hint">Required to complete registration</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large" disabled="@isProcessing">
+                            @(isProcessing ? "Processing..." : "Complete Registration")
+                        </button>
+                        <button type="button" class="btn btn-secondary" @onclick="GoBack" disabled="@isProcessing">Cancel</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="success-message">
+                    <div class="success-icon">✓</div>
+                    <h3>Registration Successful!</h3>
+                    <p>Thank you for registering for <strong>@selectedEvent.EventName</strong></p>
+                    @if (registrationEmail != null)
+                    {
+                        <p>A confirmation email has been sent to <strong>@registrationEmail</strong></p>
+                    }
+                    <p>Event Date: <strong>@FormatDateTime(selectedEvent.EventDate)</strong></p>
+                    <p class="confirmation-code">Confirmation Code: <strong>#@(EventId.ToString().PadLeft(4, '0'))-@(DateTime.Now.Ticks % 10000).ToString().PadLeft(4, '0')</strong></p>
+                    <button class="btn btn-primary" @onclick="ReturnToEvents">Back to Events</button>
+                </div>
+            }
+        </div>
+    }
+    else if (selectedEvent == null)
+    {
+        <div class="error-container">
+            <div class="error-message">
+                <p>⚠️ Event not found. Please go back and try again.</p>
+                <button class="btn btn-primary" @onclick="ReturnToEvents">← Back to Events</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="loading-container">
+            <p>Loading registration form...</p>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private Event? selectedEvent;
+    private bool isSubmitted = false;
+    private bool isProcessing = false;
+    private string? errorMessage;
+    private string? registrationEmail;
+    private List<string> validationErrors = new();
+    
+    private RegistrationFormData formData = new();
+
+    private class RegistrationFormData
+    {
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Company { get; set; } = string.Empty;
+        public bool AcceptTerms { get; set; }
+
+        public bool IsValid()
+        {
+            return !string.IsNullOrWhiteSpace(FirstName) &&
+                   !string.IsNullOrWhiteSpace(LastName) &&
+                   !string.IsNullOrWhiteSpace(Email) &&
+                   AcceptTerms;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            if (EventId <= 0)
+            {
+                errorMessage = "Invalid event ID provided.";
+                return;
+            }
+
+            selectedEvent = EventService.GetEventById(EventId);
+            
+            if (selectedEvent == null)
+            {
+                errorMessage = $"Event with ID {EventId} not found.";
+            }
+            else if (!selectedEvent.IsValid())
+            {
+                errorMessage = "Event data is invalid. Please try again later.";
+                selectedEvent = null;
+            }
+            else if (!selectedEvent.IsAvailable)
+            {
+                errorMessage = "This event is full and cannot accept new registrations.";
+                selectedEvent = null;
+            }
+
+            // Pre-fill with session data if available
+            if (SessionService.IsSessionActive && SessionService.CurrentSession != null)
+            {
+                var session = SessionService.CurrentSession;
+                formData.FirstName = session.UserName?.Split(' ').FirstOrDefault() ?? string.Empty;
+                formData.LastName = session.UserName?.Split(' ').Skip(1).FirstOrDefault() ?? string.Empty;
+                formData.Email = session.Email ?? string.Empty;
+                formData.Phone = session.Phone ?? string.Empty;
+                formData.Company = session.Company ?? string.Empty;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading event: {ex.Message}";
+        }
+    }
+
+    private void ValidateForm()
+    {
+        validationErrors.Clear();
+
+        if (string.IsNullOrWhiteSpace(formData.FirstName))
+            validationErrors.Add("First name is required.");
+
+        if (string.IsNullOrWhiteSpace(formData.LastName))
+            validationErrors.Add("Last name is required.");
+
+        if (string.IsNullOrWhiteSpace(formData.Email))
+            validationErrors.Add("Email address is required.");
+        else if (!IsValidEmail(formData.Email))
+            validationErrors.Add("Email address format is invalid.");
+
+        if (!string.IsNullOrWhiteSpace(formData.Phone) && !IsValidPhone(formData.Phone))
+            validationErrors.Add("Phone number format is invalid.");
+
+        if (!formData.AcceptTerms)
+            validationErrors.Add("You must accept the terms and conditions.");
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private bool IsValidPhone(string phone)
+    {
+        string cleaned = Regex.Replace(phone, @"[\s\-\(\)\.]", "");
+        return Regex.IsMatch(cleaned, @"^\d{10,}$");
+    }
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            ValidateForm();
+
+            if (validationErrors.Any())
+                return;
+
+            isProcessing = true;
+            await Task.Delay(500);
+
+            var userEmail = formData.Email;
+            
+            // Register in session if active
+            if (SessionService.IsSessionActive)
+            {
+                SessionService.RegisterUserForEvent(EventId);
+            }
+
+            // Record attendance
+            try
+            {
+                AttendanceService.RecordRegistration(EventId, userEmail);
+            }
+            catch
+            {
+                // Attendance recording is optional
+            }
+
+            registrationEmail = userEmail;
+            isSubmitted = true;
+            errorMessage = null;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error processing registration: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        try
+        {
+            Navigation.NavigateTo($"/event/{EventId}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error navigating back: {ex.Message}";
+        }
+    }
+
+    private void ReturnToEvents()
+    {
+        try
+        {
+            Navigation.NavigateTo("/events");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error navigating to events: {ex.Message}";
+        }
+    }
+
+    private string FormatDateTime(DateTime date)
+    {
+        try
+        {
+            return date.ToString("dddd, MMMM dd, yyyy h:mm tt");
+        }
+        catch
+        {
+            return "Date not available";
+        }
+    }
+}
+
+<div class="registration-container">
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-container">
+            <div class="error-message">
+                <p>⚠️ @errorMessage</p>
+                <button class="btn btn-primary" @onclick="GoBack">← Go Back</button>
+            </div>
+        </div>
+    }
+    else if (selectedEvent != null && selectedEvent.IsValid())
+    {
+        <div class="registration-header">
+            <h1>Event Registration</h1>
+            <h2>@selectedEvent.EventName</h2>
+        </div>
+
+        <div class="registration-content">
+            @if (!isSubmitted)
+            {
+                <form @onsubmit="HandleSubmit">
+                    @if (validationErrors.Any())
+                    {
+                        <div class="error-summary">
+                            <h4>Please fix the following errors:</h4>
+                            <ul>
+                                @foreach (var error in validationErrors)
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <div class="form-section">
+                        <h3>Your Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" 
+                                   id="firstName" 
+                                   class="form-input"
+                                   @bind="formData.FirstName"
+                                   @bind:event="oninput"
+                                   placeholder="Enter your first name"
+                                   required />
+                            <small class="form-hint">Required field</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" 
+                                   id="lastName" 
+                                   class="form-input"
+                                   @bind="formData.LastName"
+                                   @bind:event="oninput"
+                                   placeholder="Enter your last name"
+                                   required />
+                            <small class="form-hint">Required field</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" 
+                                   id="email" 
+                                   class="form-input"
+                                   @bind="formData.Email"
+                                   @bind:event="oninput"
+                                   placeholder="your.email@example.com"
+                                   required />
+                            <small class="form-hint">Must be a valid email address</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" 
+                                   id="phone" 
+                                   class="form-input"
+                                   @bind="formData.Phone"
+                                   @bind:event="oninput"
+                                   placeholder="(123) 456-7890" />
+                            <small class="form-hint">Optional, should be in format (XXX) XXX-XXXX</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="company">Company</label>
+                            <input type="text" 
+                                   id="company" 
+                                   class="form-input"
+                                   @bind="formData.Company"
+                                   @bind:event="oninput"
+                                   placeholder="Your company name" />
+                            <small class="form-hint">Optional</small>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Event Details</h3>
+                        <div class="event-summary">
+                            <div class="summary-item">
+                                <span class="label">Event:</span>
+                                <span class="value">@selectedEvent.EventName</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Date:</span>
+                                <span class="value">@FormatDateTime(selectedEvent.EventDate)</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Location:</span>
+                                <span class="value">@selectedEvent.Location</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Available Seats:</span>
+                                <span class="value">@(selectedEvent.MaxAttendees - selectedEvent.RegisteredAttendees)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group checkbox">
+                        <input type="checkbox" 
+                               id="terms" 
+                               @bind="formData.AcceptTerms" 
+                               required />
+                        <label for="terms">I accept the terms and conditions *</label>
+                        <small class="form-hint">Required to complete registration</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large" disabled="@isProcessing">
+                            @(isProcessing ? "Processing..." : "Complete Registration")
+                        </button>
+                        <button type="button" class="btn btn-secondary" @onclick="GoBack" disabled="@isProcessing">Cancel</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="success-message">
+                    <div class="success-icon">✓</div>
+                    <h3>Registration Successful!</h3>
+                    <p>Thank you for registering for <strong>@selectedEvent.EventName</strong></p>
+                    <p>A confirmation email has been sent to <strong>@formData.Email</strong></p>
+                    <p>Event Date: <strong>@FormatDateTime(selectedEvent.EventDate)</strong></p>
+                    <p class="confirmation-code">Confirmation Code: <strong>#@(EventId.ToString().PadLeft(4, '0'))-@(DateTime.Now.Ticks % 10000).ToString().PadLeft(4, '0')</strong></p>
+                    <button class="btn btn-primary" @onclick="ReturnToEvents">Back to Events</button>
+                </div>
+            }
+        </div>
+    }
+    else if (selectedEvent == null)
+    {
+        <div class="error-container">
+            <div class="error-message">
+                <p>⚠️ Event not found. Please go back and try again.</p>
+                <button class="btn btn-primary" @onclick="ReturnToEvents">← Back to Events</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="loading-container">
+            <p>Loading registration form...</p>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private Event? selectedEvent;
+    private bool isSubmitted = false;
+    private bool isProcessing = false;
+    private string? errorMessage;
+    private List<string> validationErrors = new();
+    
+    private RegistrationFormData formData = new();
+
+    private class RegistrationFormData
+    {
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Company { get; set; } = string.Empty;
+        public bool AcceptTerms { get; set; }
+
+        public bool IsValid()
+        {
+            return !string.IsNullOrWhiteSpace(FirstName) &&
+                   !string.IsNullOrWhiteSpace(LastName) &&
+                   !string.IsNullOrWhiteSpace(Email) &&
+                   AcceptTerms;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            if (EventId <= 0)
+            {
+                errorMessage = "Invalid event ID provided.";
+                return;
+            }
+
+            // Load event data
+            var allEvents = new List<Event>
+            {
+                new Event 
+                { 
+                    Id = 1,
+                    EventName = "Annual Tech Conference 2024",
+                    Description = "Join industry leaders for keynote speeches and networking",
+                    EventDate = DateTime.Now.AddDays(15),
+                    Location = "San Francisco Convention Center",
+                    Category = "Technology",
+                    MaxAttendees = 500,
+                    RegisteredAttendees = 342
+                },
+                new Event 
+                { 
+                    Id = 2,
+                    EventName = "Business Networking Breakfast",
+                    Description = "Start your morning with coffee and valuable business connections",
+                    EventDate = DateTime.Now.AddDays(5),
+                    Location = "Downtown Hilton",
+                    Category = "Networking",
+                    MaxAttendees = 50,
+                    RegisteredAttendees = 45
+                },
+                new Event 
+                { 
+                    Id = 3,
+                    EventName = "C# Workshop for Beginners",
+                    Description = "Learn C# fundamentals with hands-on exercises",
+                    EventDate = DateTime.Now.AddDays(22),
+                    Location = "Tech Academy Building",
+                    Category = "Workshop",
+                    MaxAttendees = 100,
+                    RegisteredAttendees = 67
+                },
+                new Event 
+                { 
+                    Id = 4,
+                    EventName = "Corporate Award Ceremony",
+                    Description = "Celebrate excellence and company achievements",
+                    EventDate = DateTime.Now.AddDays(45),
+                    Location = "Grand Ballroom Hotel",
+                    Category = "Corporate",
+                    MaxAttendees = 300,
+                    RegisteredAttendees = 156
+                },
+                new Event 
+                { 
+                    Id = 5,
+                    EventName = "Web Development Bootcamp",
+                    Description = "Intensive 3-day program on modern web technologies",
+                    EventDate = DateTime.Now.AddDays(30),
+                    Location = "Innovation Hub",
+                    Category = "Workshop",
+                    MaxAttendees = 75,
+                    RegisteredAttendees = 75
+                }
+            };
+
+            selectedEvent = allEvents.FirstOrDefault(e => e.Id == EventId);
+            
+            if (selectedEvent == null)
+            {
+                errorMessage = $"Event with ID {EventId} not found.";
+            }
+            else if (!selectedEvent.IsValid())
+            {
+                errorMessage = "Event data is invalid. Please try again later.";
+                selectedEvent = null;
+            }
+            else if (!selectedEvent.IsAvailable)
+            {
+                errorMessage = "This event is full and cannot accept new registrations.";
+                selectedEvent = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading event: {ex.Message}";
+        }
+    }
+
+    private void ValidateForm()
+    {
+        validationErrors.Clear();
+
+        if (string.IsNullOrWhiteSpace(formData.FirstName))
+            validationErrors.Add("First name is required.");
+
+        if (string.IsNullOrWhiteSpace(formData.LastName))
+            validationErrors.Add("Last name is required.");
+
+        if (string.IsNullOrWhiteSpace(formData.Email))
+            validationErrors.Add("Email address is required.");
+        else if (!IsValidEmail(formData.Email))
+            validationErrors.Add("Email address format is invalid.");
+
+        if (!string.IsNullOrWhiteSpace(formData.Phone) && !IsValidPhone(formData.Phone))
+            validationErrors.Add("Phone number format is invalid.");
+
+        if (!formData.AcceptTerms)
+            validationErrors.Add("You must accept the terms and conditions.");
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private bool IsValidPhone(string phone)
+    {
+        // Remove common separators
+        string cleaned = Regex.Replace(phone, @"[\s\-\(\)\.]", "");
+        return Regex.IsMatch(cleaned, @"^\d{10,}$");
+    }
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            ValidateForm();
+
+            if (validationErrors.Any())
+                return;
+
+            isProcessing = true;
+
+            // Simulate processing delay
+            await System.Threading.Tasks.Task.Delay(500);
+
+            isSubmitted = true;
+            errorMessage = null;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error processing registration: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        try
+        {
+            Navigation.NavigateTo($"/event/{EventId}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error navigating back: {ex.Message}";
+        }
+    }
+
+    private void ReturnToEvents()
+    {
+        try
+        {
+            Navigation.NavigateTo("/events");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error navigating to events: {ex.Message}";
+        }
+    }
+
+    private string FormatDateTime(DateTime date)
+    {
+        try
+        {
+            return date.ToString("dddd, MMMM dd, yyyy h:mm tt");
+        }
+        catch
+        {
+            return "Date not available";
+        }
+    }
+}

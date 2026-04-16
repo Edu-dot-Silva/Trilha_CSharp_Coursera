@@ -1,0 +1,33 @@
+﻿@page "/"
+
+@* Define o título da página como "Home" *@
+<PageTitle>Home</PageTitle>
+
+@* Componente HybridComponent comentado inicialmente *@
+@* <HybridComponent /> *@
+
+@* Título de boas-vindas da aplicação *@
+<h1>Welcome to Blazor Performance App</h1>
+
+@if(IsDataLoaded)
+{
+    @* Exibe o componente HybridComponent quando os dados são carregados *@
+    <HybridComponent />
+}
+else
+{
+    @* Exibe um botão para carregar os dados se ainda não foram carregados *@
+    <button @onclick="LoadData">Load Data</button>
+}
+
+@code{
+    @* Propriedade booleana que indica se os dados foram carregados *@
+    private bool IsDataLoaded = false;
+
+    @* Método chamado ao clicar no botão - define que os dados foram carregados *@
+    private void LoadData()
+    {
+        IsDataLoaded = true;
+    }
+}
+

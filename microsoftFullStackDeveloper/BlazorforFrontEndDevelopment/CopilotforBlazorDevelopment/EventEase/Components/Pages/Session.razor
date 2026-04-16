@@ -1,0 +1,242 @@
+@page "/session"
+@using EventEase.Services
+@inject NavigationManager Navigation
+@inject SessionStateService SessionService
+
+<div class="session-container">
+    @if (!isSessionActive || SessionService.CurrentSession == null)
+    {
+        <div class="session-form-container">
+            <h1>User Session</h1>
+            <p class="lead">Sign in to register for events</p>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error-summary">
+                    <p>⚠️ @errorMessage</p>
+                </div>
+            }
+
+            <form @onsubmit="HandleSignIn">
+                <div class="form-section">
+                    <h3>Your Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="userName">Full Name *</label>
+                        <input type="text" 
+                               id="userName" 
+                               class="form-input"
+                               @bind="formData.UserName"
+                               @bind:event="oninput"
+                               placeholder="Enter your full name"
+                               required />
+                        <small class="form-hint">Required field</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" 
+                               id="email" 
+                               class="form-input"
+                               @bind="formData.Email"
+                               @bind:event="oninput"
+                               placeholder="your.email@example.com"
+                               required />
+                        <small class="form-hint">Must be a valid email address</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" 
+                               id="phone" 
+                               class="form-input"
+                               @bind="formData.Phone"
+                               @bind:event="oninput"
+                               placeholder="(123) 456-7890" />
+                        <small class="form-hint">Optional</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company">Company</label>
+                        <input type="text" 
+                               id="company" 
+                               class="form-input"
+                               @bind="formData.Company"
+                               @bind:event="oninput"
+                               placeholder="Your company name" />
+                        <small class="form-hint">Optional</small>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large" disabled="@isProcessing">
+                        @(isProcessing ? "Starting Session..." : "Start Session")
+                    </button>
+                    <button type="button" class="btn btn-secondary" @onclick="GoBack" disabled="@isProcessing">Cancel</button>
+                </div>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="session-active-container">
+            <div class="session-header">
+                <h1>Welcome back, @SessionService.CurrentSession.UserName!</h1>
+                <div class="session-details">
+                    <p><strong>Email:</strong> @SessionService.CurrentSession.Email</p>
+                    @if (!string.IsNullOrEmpty(SessionService.CurrentSession.Phone))
+                    {
+                        <p><strong>Phone:</strong> @SessionService.CurrentSession.Phone</p>
+                    }
+                    @if (!string.IsNullOrEmpty(SessionService.CurrentSession.Company))
+                    {
+                        <p><strong>Company:</strong> @SessionService.CurrentSession.Company</p>
+                    }
+                    <p><strong>Session ID:</strong> <code>@SessionService.CurrentSession.SessionId.Substring(0, 8)...</code></p>
+                </div>
+            </div>
+
+            <div class="session-registrations">
+                <h2>Your Event Registrations</h2>
+                @if (SessionService.CurrentSession.RegisteredEventIds.Any())
+                {
+                    <p>You have registered for <strong>@SessionService.CurrentSession.RegisteredEventIds.Count</strong> event(s)</p>
+                    <div class="registration-list">
+                        @foreach (var eventId in SessionService.CurrentSession.RegisteredEventIds)
+                        {
+                            <div class="registration-item">
+                                <span>Event ID: @eventId</span>
+                                <button class="btn btn-sm btn-primary" @onclick="@(() => ViewEvent(eventId))">View</button>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="no-registrations">You haven't registered for any events yet.</p>
+                }
+            </div>
+
+            <div class="session-actions">
+                <button class="btn btn-primary" @onclick="BrowseEvents">Browse Events</button>
+                <button class="btn btn-danger" @onclick="EndSession">End Session</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private bool isSessionActive = false;
+    private bool isProcessing = false;
+    private string? errorMessage;
+    
+    private SessionFormData formData = new();
+
+    private class SessionFormData
+    {
+        public string UserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string? Phone { get; set; }
+        public string? Company { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        isSessionActive = SessionService.IsSessionActive;
+    }
+
+    private async Task HandleSignIn()
+    {
+        try
+        {
+            errorMessage = ValidateForm();
+            if (!string.IsNullOrEmpty(errorMessage))
+                return;
+
+            isProcessing = true;
+            await Task.Delay(300);
+
+            var session = SessionService.CreateSession(
+                formData.UserName,
+                formData.Email,
+                formData.Phone,
+                formData.Company
+            );
+
+            isSessionActive = true;
+            errorMessage = null;
+            await Task.Delay(300);
+            Navigation.NavigateTo("/events");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error creating session: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private string? ValidateForm()
+    {
+        if (string.IsNullOrWhiteSpace(formData.UserName))
+            return "Full name is required.";
+
+        if (string.IsNullOrWhiteSpace(formData.Email))
+            return "Email address is required.";
+
+        if (!IsValidEmail(formData.Email))
+            return "Email address format is invalid.";
+
+        if (!string.IsNullOrWhiteSpace(formData.Phone) && !IsValidPhone(formData.Phone))
+            return "Phone number format is invalid.";
+
+        return null;
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == email;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private bool IsValidPhone(string phone)
+    {
+        string cleaned = System.Text.RegularExpressions.Regex.Replace(phone, @"[\s\-\(\)\.]", "");
+        return System.Text.RegularExpressions.Regex.IsMatch(cleaned, @"^\d{10,}$");
+    }
+
+    private void ViewEvent(int eventId)
+    {
+        Navigation.NavigateTo($"/event/{eventId}");
+    }
+
+    private void BrowseEvents()
+    {
+        Navigation.NavigateTo("/events");
+    }
+
+    private void EndSession()
+    {
+        if (SessionService.CurrentSession != null)
+        {
+            SessionService.EndSession();
+            isSessionActive = false;
+            formData = new SessionFormData();
+            StateHasChanged();
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/events");
+    }
+}

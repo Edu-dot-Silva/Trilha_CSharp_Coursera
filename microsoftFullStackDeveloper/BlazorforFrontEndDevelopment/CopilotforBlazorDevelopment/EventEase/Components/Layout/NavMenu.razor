@@ -1,0 +1,27 @@
+@using Microsoft.AspNetCore.Components.Routing
+
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-brand">
+            <NavLink href="/" Match="NavLinkMatch.All" class="nav-link-brand">
+                🎉 EventEase
+            </NavLink>
+        </div>
+
+        <div class="nav-menu">
+            <NavLink href="/" Match="NavLinkMatch.All" class="nav-link">
+                <span>Events</span>
+            </NavLink>
+            <NavLink href="/events" Match="NavLinkMatch.Prefix" class="nav-link">
+                <span>Browse</span>
+            </NavLink>
+        </div>
+
+        <div class="nav-info">
+            <p>Event Management System</p>
+        </div>
+    </div>
+</nav>
+
+@code {
+}

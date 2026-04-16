@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EventEase - Event Management System</title>
+    <base href="/" />
+    <link href="app.css" rel="stylesheet" />
+    <link href="EventEase.styles.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="app">
+        <div style="display: flex; align-items: center; justify-content: center; height: 100vh; background: linear-gradient(135deg, #4a90e2, #2c5aa0);">
+            <div style="text-align: center; color: white;">
+                <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">EventEase</h1>
+                <p style="font-size: 1.1rem;">Loading your event management system...</p>
+                <div style="margin-top: 2rem;">
+                    <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite;" />
+                </div>
+            </div>
+        </div>
+        <style>
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        </style>
+    </div>
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser console for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>

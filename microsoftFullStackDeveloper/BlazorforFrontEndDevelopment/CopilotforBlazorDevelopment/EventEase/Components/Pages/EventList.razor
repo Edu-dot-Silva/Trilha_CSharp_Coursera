@@ -1,0 +1,403 @@
+@page "/"
+@page "/events"
+@using EventEase.Models
+@using EventEase.Services
+@implements IAsyncDisposable
+@inject NavigationManager Navigation
+@inject EventDataService EventService
+@inject SessionStateService SessionService
+
+<div class="events-container">
+    <div class="events-header">
+        <h1>EventEase - Browse Events</h1>
+        <p class="lead">Discover and register for amazing corporate and social events</p>
+        @if (SessionService.IsSessionActive && SessionService.CurrentSession != null)
+        {
+            <div class="session-info">
+                <p>Welcome, <strong>@SessionService.CurrentSession.UserName</strong></p>
+                <p class="registration-count">Your registrations: <strong>@SessionService.CurrentSession.RegisteredEventIds.Count</strong></p>
+            </div>
+        }
+    </div>
+    
+    <div class="filter-section">
+        <div class="search-controls">
+            <input type="text" 
+                   placeholder="Search events..." 
+                   class="search-input"
+                   @bind="searchQuery"
+                   @onchange="OnSearchChanged" 
+                   @oninput="OnSearchInput" />
+            <select class="category-filter" @onchange="OnCategoryChanged">
+                <option value="">All Categories</option>
+                @foreach (var category in categories)
+                {
+                    <option value="@category">@category</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-message">
+            <p>⚠️ @errorMessage</p>
+        </div>
+    }
+    
+    <div class="events-grid">
+        @if (filteredEvents.Any())
+        {
+            <p class="results-info">Showing @filteredEvents.Count() of @events.Count() events</p>
+            @foreach (var evt in filteredEvents.Take(displayCount))
+            {
+                <EventCard Event="evt" 
+                          IsRegistered="SessionService.CurrentSession?.IsRegisteredForEvent(evt.Id) ?? false"
+                          OnEventSelected="HandleEventSelected"
+                          OnRegisterClick="HandleRegisterClick" />
+            }
+            
+            @if (filteredEvents.Count() > displayCount)
+            {
+                <button class="btn btn-secondary load-more" @onclick="LoadMore">
+                    Load More (@(filteredEvents.Count() - displayCount) remaining)
+                </button>
+            }
+        }
+        else
+        {
+            <p class="no-events">@(string.IsNullOrEmpty(searchQuery) ? "No events found." : "No events match your search.")</p>
+        }
+    </div>
+</div>
+
+@code {
+    private string searchQuery = string.Empty;
+    private string selectedCategory = string.Empty;
+    private string? errorMessage;
+    private List<Event> events = new();
+    private List<Event> cachedFilteredEvents = new();
+    private string cachedSearchQuery = string.Empty;
+    private string cachedCategory = string.Empty;
+    private int displayCount = 6;
+    private System.Threading.Timer? searchTimer;
+    private List<string> categories = new();
+
+    private List<Event> filteredEvents
+    {
+        get
+        {
+            // Use cached results if search query and category haven't changed
+            if (cachedSearchQuery == searchQuery && cachedCategory == selectedCategory)
+                return cachedFilteredEvents;
+
+            try
+            {
+                var query = searchQuery?.Trim() ?? string.Empty;
+                
+                IEnumerable<Event> results = string.IsNullOrEmpty(query) 
+                    ? EventService.GetAllEvents()
+                    : EventService.SearchEvents(query);
+
+                if (!string.IsNullOrEmpty(selectedCategory))
+                {
+                    results = results.Where(e => e.Category.Equals(selectedCategory, StringComparison.OrdinalIgnoreCase));
+                }
+
+                cachedFilteredEvents = results
+                    .OrderBy(e => e.EventDate)
+                    .ToList();
+
+                cachedSearchQuery = searchQuery;
+                cachedCategory = selectedCategory;
+                errorMessage = null;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Error filtering events: {ex.Message}";
+                cachedFilteredEvents = events.ToList();
+            }
+
+            return cachedFilteredEvents;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            events = EventService.GetAllEvents();
+            categories = EventService.GetCategories();
+            SessionService.OnSessionChanged += StateHasChanged;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading events: {ex.Message}";
+        }
+    }
+
+    private void OnSearchInput(ChangeEventArgs e)
+    {
+        searchTimer?.Dispose();
+        searchTimer = new System.Threading.Timer(_ =>
+        {
+            searchQuery = e.Value?.ToString() ?? string.Empty;
+            displayCount = 6;
+            StateHasChanged();
+        }, null, 300, System.Threading.Timeout.Infinite);
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchQuery = e.Value?.ToString() ?? string.Empty;
+        displayCount = 6;
+    }
+
+    private void OnCategoryChanged(ChangeEventArgs e)
+    {
+        selectedCategory = e.Value?.ToString() ?? string.Empty;
+        displayCount = 6;
+        cachedCategory = string.Empty; // Clear cache
+    }
+
+    private void HandleEventSelected(int eventId)
+    {
+        try
+        {
+            var selectedEvent = EventService.GetEventById(eventId);
+            if (selectedEvent == null)
+            {
+                errorMessage = "Event not found.";
+                return;
+            }
+            Navigation.NavigateTo($"/event/{eventId}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error navigating to event: {ex.Message}";
+        }
+    }
+
+    private void HandleRegisterClick(int eventId)
+    {
+        try
+        {
+            if (!SessionService.IsSessionActive)
+            {
+                Navigation.NavigateTo($"/session");
+                return;
+            }
+
+            var selectedEvent = EventService.GetEventById(eventId);
+            if (selectedEvent == null)
+            {
+                errorMessage = "Event not found.";
+                return;
+            }
+            if (!selectedEvent.IsAvailable)
+            {
+                errorMessage = "This event is full and cannot accept more registrations.";
+                return;
+            }
+            Navigation.NavigateTo($"/register/{eventId}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+    }
+
+    private void LoadMore()
+    {
+        displayCount += 6;
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        searchTimer?.Dispose();
+        SessionService.OnSessionChanged -= StateHasChanged;
+        await ValueTask.CompletedTask;
+    }
+}
+
+@code {
+    private string searchQuery = string.Empty;
+    private string? errorMessage;
+    private List<Event> events = new();
+    private List<Event> cachedFilteredEvents = new();
+    private string cachedSearchQuery = string.Empty;
+    private int displayCount = 6;
+    private System.Threading.Timer? searchTimer;
+
+    private List<Event> filteredEvents
+    {
+        get
+        {
+            // Use cached results if search query hasn't changed
+            if (cachedSearchQuery == searchQuery)
+                return cachedFilteredEvents;
+
+            try
+            {
+                var query = searchQuery?.Trim() ?? string.Empty;
+                cachedFilteredEvents = events
+                    .Where(e => e.IsValid() && (
+                        string.IsNullOrEmpty(query) ||
+                        e.EventName.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                        e.Location.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                        e.Category.Contains(query, StringComparison.OrdinalIgnoreCase)
+                    ))
+                    .OrderBy(e => e.EventDate)
+                    .ToList();
+
+                cachedSearchQuery = searchQuery;
+                errorMessage = null;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Error filtering events: {ex.Message}";
+                cachedFilteredEvents = events.Where(e => e.IsValid()).ToList();
+            }
+
+            return cachedFilteredEvents;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            // Initialize with mock data
+            events = new List<Event>
+            {
+                new Event 
+                { 
+                    Id = 1,
+                    EventName = "Annual Tech Conference 2024",
+                    Description = "Join industry leaders for keynote speeches and networking",
+                    EventDate = DateTime.Now.AddDays(15),
+                    Location = "San Francisco Convention Center",
+                    Category = "Technology",
+                    MaxAttendees = 500,
+                    RegisteredAttendees = 342
+                },
+                new Event 
+                { 
+                    Id = 2,
+                    EventName = "Business Networking Breakfast",
+                    Description = "Start your morning with coffee and valuable business connections",
+                    EventDate = DateTime.Now.AddDays(5),
+                    Location = "Downtown Hilton",
+                    Category = "Networking",
+                    MaxAttendees = 50,
+                    RegisteredAttendees = 45
+                },
+                new Event 
+                { 
+                    Id = 3,
+                    EventName = "C# Workshop for Beginners",
+                    Description = "Learn C# fundamentals with hands-on exercises",
+                    EventDate = DateTime.Now.AddDays(22),
+                    Location = "Tech Academy Building",
+                    Category = "Workshop",
+                    MaxAttendees = 100,
+                    RegisteredAttendees = 67
+                },
+                new Event 
+                { 
+                    Id = 4,
+                    EventName = "Corporate Award Ceremony",
+                    Description = "Celebrate excellence and company achievements",
+                    EventDate = DateTime.Now.AddDays(45),
+                    Location = "Grand Ballroom Hotel",
+                    Category = "Corporate",
+                    MaxAttendees = 300,
+                    RegisteredAttendees = 156
+                },
+                new Event 
+                { 
+                    Id = 5,
+                    EventName = "Web Development Bootcamp",
+                    Description = "Intensive 3-day program on modern web technologies",
+                    EventDate = DateTime.Now.AddDays(30),
+                    Location = "Innovation Hub",
+                    Category = "Workshop",
+                    MaxAttendees = 75,
+                    RegisteredAttendees = 75
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading events: {ex.Message}";
+        }
+    }
+
+    private void OnSearchInput(ChangeEventArgs e)
+    {
+        searchTimer?.Dispose();
+        searchTimer = new System.Threading.Timer(_ =>
+        {
+            searchQuery = e.Value?.ToString() ?? string.Empty;
+            displayCount = 6;
+            StateHasChanged();
+        }, null, 300, System.Threading.Timeout.Infinite);
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchQuery = e.Value?.ToString() ?? string.Empty;
+        displayCount = 6;
+    }
+
+    private void HandleEventSelected(int eventId)
+    {
+        try
+        {
+            var selectedEvent = events.FirstOrDefault(e => e.Id == eventId);
+            if (selectedEvent == null)
+            {
+                errorMessage = "Event not found.";
+                return;
+            }
+            Navigation.NavigateTo($"/event/{eventId}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error navigating to event: {ex.Message}";
+        }
+    }
+
+    private void HandleRegisterClick(int eventId)
+    {
+        try
+        {
+            var selectedEvent = events.FirstOrDefault(e => e.Id == eventId);
+            if (selectedEvent == null)
+            {
+                errorMessage = "Event not found.";
+                return;
+            }
+            if (!selectedEvent.IsAvailable)
+            {
+                errorMessage = "This event is full and cannot accept more registrations.";
+                return;
+            }
+            Navigation.NavigateTo($"/register/{eventId}");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+    }
+
+    private void LoadMore()
+    {
+        displayCount += 6;
+    }
+
+    public void Dispose()
+    {
+        searchTimer?.Dispose();
+    }
+}

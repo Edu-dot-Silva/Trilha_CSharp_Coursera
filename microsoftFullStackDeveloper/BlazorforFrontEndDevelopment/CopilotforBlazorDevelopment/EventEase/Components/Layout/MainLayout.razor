@@ -1,0 +1,26 @@
+@inherits LayoutComponent
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75' font-weight='bold' fill='%234a90e2'>E</text></svg>" 
+                 alt="EventEase Logo" 
+                 class="logo" />
+            <h1 class="app-title">EventEase</h1>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred!
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>

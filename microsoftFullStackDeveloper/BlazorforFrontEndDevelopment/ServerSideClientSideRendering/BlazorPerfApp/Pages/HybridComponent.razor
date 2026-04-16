@@ -1,0 +1,38 @@
+@inject HttpClient Http
+@inject ILogger<HybridComponent> Logger
+
+@* Componente de Renderização Híbrida - Exibe dados carregados ou uma mensagem de carregamento *@
+<h3>Hybrid Rendering Component</h3>
+
+@if(Data == null)
+{
+    @* Exibe mensagem de carregamento enquanto os dados não são carregados *@
+    <p>Loading data...</p>
+}
+else
+{
+    @* Exibe a lista de dados quando carregados *@
+    <ul>
+        @foreach(var item in Data)
+        {
+            <li>@item</li>
+        }
+    </ul>
+}
+
+@code {
+    @* Propriedade para armazenar a lista de dados *@
+    private List<string> Data { get; set; }
+
+    @* Método chamado quando o componente é inicializado - carrega os dados *@
+    protected override async Task OnInitializedAsync()
+    {
+        @* Loga o início do carregamento de dados *@
+        Logger?.LogInformation("Fetching data...");
+        @* Carrega dados simulados (a chamada HTTP está comentada para fins de demonstração) *@
+        @* Data = await Http.GetFromJsonAsync<List<string>>("sample-data"); *@
+        Data = new List<string>{"Test Data 1", "Test Data 2", "Test Data 3"};
+        @* Loga o sucesso no carregamento de dados *@
+        Logger?.LogInformation("Data fetched successfully.");
+    }
+}
