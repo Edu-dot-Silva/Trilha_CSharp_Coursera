@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FrontEndApp/FrontEndApp.csproj" />
+  <Project Path="ServerAPI/ServerAPI.csproj" />
+</Solution>
