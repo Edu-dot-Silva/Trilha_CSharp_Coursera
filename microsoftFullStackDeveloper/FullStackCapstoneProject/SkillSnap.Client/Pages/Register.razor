@@ -1,0 +1,145 @@
+@page "/register"
+@using SkillSnap.Client.Services
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+
+<div class="register-container">
+    <div class="register-card">
+        <h2>Registro</h2>
+        
+        @if (!string.IsNullOrEmpty(SuccessMessage))
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @SuccessMessage
+                <button type="button" class="btn-close" @onclick="ClearSuccess"></button>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @ErrorMessage
+                <button type="button" class="btn-close" @onclick="ClearError"></button>
+            </div>
+        }
+
+        <form @onsubmit="HandleRegister">
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Primeiro Nome:</label>
+                <input type="text" class="form-control" id="firstName" @bind="FirstName" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Sobrenome:</label>
+                <input type="text" class="form-control" id="lastName" @bind="LastName" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="email" @bind="Email" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Senha:</label>
+                <input type="password" class="form-control" id="password" @bind="Password" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" disabled="@IsLoading">
+                @if (IsLoading)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Registrando...</span>
+                }
+                else
+                {
+                    <span>Registrar</span>
+                }
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p>Já tem conta? <a href="/login">Faça login aqui</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem 0;
+    }
+
+    .register-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .register-card h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+</style>
+
+@code {
+    private string FirstName = "";
+    private string LastName = "";
+    private string Email = "";
+    private string Password = "";
+    private string ErrorMessage = "";
+    private string SuccessMessage = "";
+    private bool IsLoading = false;
+
+    private void ClearSuccess()
+    {
+        SuccessMessage = "";
+    }
+
+    private void ClearError()
+    {
+        ErrorMessage = "";
+    }
+
+    private async Task HandleRegister()
+    {
+        if (string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName) || 
+            string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+        {
+            ErrorMessage = "Todos os campos são obrigatórios.";
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        var (success, message) = await AuthService.RegisterAsync(Email, Password, FirstName, LastName);
+
+        if (success)
+        {
+            SuccessMessage = message;
+            // Limpar formulário
+            FirstName = "";
+            LastName = "";
+            Email = "";
+            Password = "";
+            // Redirecionar para login após 2 segundos
+            await Task.Delay(2000);
+            NavigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            ErrorMessage = message;
+        }
+
+        IsLoading = false;
+    }
+}

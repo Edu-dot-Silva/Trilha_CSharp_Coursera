@@ -1,0 +1,133 @@
+@using SkillSnap.Client.Models
+@inject PortfolioUserService PortfolioUserService
+
+<div class="profile-card">
+    @if (IsLoading)
+    {
+        <p class="loading">Loading profile...</p>
+    }
+    else if (User == null)
+    {
+        <p class="no-data">No user profile found.</p>
+    }
+    else
+    {
+        <div class="profile-header">
+            @if (!string.IsNullOrEmpty(User.ProfileImageUrl))
+            {
+                <img src="@User.ProfileImageUrl" alt="@User.Name" class="profile-image" />
+            }
+            else
+            {
+                <div class="profile-image-placeholder">
+                    <span>No Image</span>
+                </div>
+            }
+        </div>
+        <div class="profile-content">
+            <h2 class="profile-name">@User.Name</h2>
+            <p class="profile-bio">@User.Bio</p>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int? UserId { get; set; }
+
+    private PortfolioUserDTO? User;
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            IsLoading = true;
+
+            if (UserId.HasValue)
+            {
+                User = await PortfolioUserService.GetPortfolioUserAsync(UserId.Value);
+            }
+            else
+            {
+                var users = await PortfolioUserService.GetPortfolioUsersAsync();
+                User = users?.FirstOrDefault();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading profile: {ex.Message}");
+            User = null;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}
+
+<style>
+    .profile-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 400px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        background-color: #fff;
+    }
+
+    .profile-header {
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .profile-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #007bff;
+    }
+
+    .profile-image-placeholder {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid #ccc;
+        margin: 0 auto;
+    }
+
+    .profile-content {
+        text-align: center;
+    }
+
+    .profile-name {
+        margin: 10px 0 5px;
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    .profile-bio {
+        margin: 0;
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .loading {
+        color: #007bff;
+        text-align: center;
+        padding: 20px;
+        font-style: italic;
+    }
+
+    .no-data {
+        color: #999;
+        text-align: center;
+        padding: 20px;
+    }
+</style>

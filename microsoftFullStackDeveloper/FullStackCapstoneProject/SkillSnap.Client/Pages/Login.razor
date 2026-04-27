@@ -1,0 +1,108 @@
+@page "/login"
+@using SkillSnap.Client.Services
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+
+<div class="login-container">
+    <div class="login-card">
+        <h2>Login</h2>
+        
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @ErrorMessage
+                <button type="button" class="btn-close" @onclick="ClearError"></button>
+            </div>
+        }
+
+        <form @onsubmit="HandleLogin">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="email" @bind="Email" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Senha:</label>
+                <input type="password" class="form-control" id="password" @bind="Password" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" disabled="@IsLoading">
+                @if (IsLoading)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Entrando...</span>
+                }
+                else
+                {
+                    <span>Login</span>
+                }
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p>Não tem conta? <a href="/register">Registre-se aqui</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .login-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .login-card h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+</style>
+
+@code {
+    private string Email = "";
+    private string Password = "";
+    private string ErrorMessage = "";
+    private bool IsLoading = false;
+
+    private void ClearError()
+    {
+        ErrorMessage = "";
+    }
+
+    private async Task HandleLogin()
+    {
+        if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+        {
+            ErrorMessage = "Email e senha são obrigatórios.";
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        var (success, message, token) = await AuthService.LoginAsync(Email, Password);
+
+        if (success)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            ErrorMessage = message;
+        }
+
+        IsLoading = false;
+    }
+}

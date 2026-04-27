@@ -1,0 +1,153 @@
+@using SkillSnap.Client.Models
+@using SkillSnap.Client.Services
+@page "/"
+@inject AuthService AuthService
+@inject UserSessionService SessionService
+@inject NavigationManager NavigationManager
+
+<div class="navbar">
+    <div class="navbar-content">
+        <h1 class="navbar-title">SkillSnap</h1>
+        <div class="navbar-links">
+            @if (IsAuthenticated)
+            {
+                <span class="user-name">Olá, @(SessionService.UserEmail ?? "Usuário")!</span>
+                <button class="btn btn-sm btn-danger" @onclick="HandleLogout">Sair</button>
+            }
+            else
+            {
+                <a href="/login" class="btn btn-sm btn-primary me-2">Login</a>
+                <a href="/register" class="btn btn-sm btn-secondary">Registrar</a>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    @if (!IsAuthenticated)
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <strong>Bem-vindo ao SkillSnap!</strong> Faça login ou registre-se para começar a usar o aplicativo.
+            <button type="button" class="btn-close" @onclick="CloseWelcome"></button>
+        </div>
+    }
+    else
+    {
+        <div class="main-layout">
+            @if (CurrentUserId.HasValue)
+            {
+                <ProfileCard @key="profileRefreshKey" UserId="CurrentUserId.Value" />
+                
+                <div class="section">
+                    <AddProjectForm UserId="CurrentUserId.Value" OnProjectAdded="RefreshProjects" />
+                    <ProjectList @key="projectRefreshKey" UserId="CurrentUserId.Value" />
+                </div>
+
+                <div class="section">
+                    <AddSkillForm UserId="CurrentUserId.Value" OnSkillAdded="RefreshSkills" />
+                    <SkillTags @key="skillRefreshKey" UserId="CurrentUserId.Value" />
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">Loading user profile...</div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private int profileRefreshKey = 0;
+    private int projectRefreshKey = 0;
+    private int skillRefreshKey = 0;
+    private bool IsAuthenticated = false;
+    private int? CurrentUserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsAuthenticated = await AuthService.IsAuthenticatedAsync();
+        if (IsAuthenticated)
+        {
+            CurrentUserId = SessionService.UserId;
+            if (!CurrentUserId.HasValue)
+            {
+                // User is authenticated but session not yet populated
+                // This shouldn't happen in normal flow, but handle gracefully
+                NavigationManager.NavigateTo("/login");
+            }
+        }
+    }
+
+    private void RefreshProjects()
+    {
+        projectRefreshKey++;
+    }
+
+    private void RefreshSkills()
+    {
+        skillRefreshKey++;
+    }
+
+    private void CloseWelcome()
+    {
+        // Just for dismissing the alert
+    }
+
+    private async Task HandleLogout()
+    {
+        await AuthService.LogoutAsync();
+        IsAuthenticated = false;
+        CurrentUserId = null;
+        NavigationManager.NavigateTo("/");
+    }
+}
+
+<style>
+    .navbar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 0;
+    }
+
+    .navbar-links {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .user-name {
+        margin-right: 15px;
+        font-size: 14px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .main-layout {
+        padding: 20px;
+    }
+
+    .section {
+        margin-top: 30px;
+    }
+</style>

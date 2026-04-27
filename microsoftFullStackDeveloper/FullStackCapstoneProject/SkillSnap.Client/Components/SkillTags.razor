@@ -1,0 +1,149 @@
+@using SkillSnap.Client.Models
+@inject SkillService SkillService
+
+<div class="skills-container">
+    <h2 class="section-title">Skills</h2>
+    
+    @if (IsLoading)
+    {
+        <p class="loading">Loading skills...</p>
+    }
+    else if (Skills == null || Skills.Count == 0)
+    {
+        <p class="no-data">No skills available.</p>
+    }
+    else
+    {
+        <div class="skills-tags">
+            @foreach (var skill in Skills)
+            {
+                <span class="skill-tag skill-level-@GetLevelClass(skill.Level)">
+                    @skill.Name
+                    <span class="skill-level">@skill.Level</span>
+                </span>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int? UserId { get; set; }
+
+    private List<SkillDTO>? Skills;
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            IsLoading = true;
+
+            if (UserId.HasValue)
+            {
+                Skills = await SkillService.GetSkillsByUserAsync(UserId.Value);
+            }
+            else
+            {
+                Skills = await SkillService.GetSkillsAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading skills: {ex.Message}");
+            Skills = new List<SkillDTO>();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private string GetLevelClass(string level)
+    {
+        return level?.ToLower() switch
+        {
+            "beginner" => "beginner",
+            "intermediate" => "intermediate",
+            "advanced" => "advanced",
+            "expert" => "expert",
+            _ => "intermediate"
+        };
+    }
+}
+
+<style>
+    .skills-container {
+        margin-top: 30px;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #28a745;
+        padding-bottom: 10px;
+    }
+
+    .no-data {
+        color: #999;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .skills-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .skill-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .skill-level-beginner {
+        background-color: #e7f3ff;
+        color: #0066cc;
+        border: 1px solid #99ccff;
+    }
+
+    .skill-level-intermediate {
+        background-color: #fff3e0;
+        color: #e65100;
+        border: 1px solid #ffe0b2;
+    }
+
+    .skill-level-advanced {
+        background-color: #f3e5f5;
+        color: #6a1b9a;
+        border: 1px solid #e1bee7;
+    }
+
+    .skill-level-expert {
+        background-color: #e8f5e9;
+        color: #1b5e20;
+        border: 1px solid #c8e6c9;
+    }
+
+    .skill-level {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        padding: 2px 6px;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .loading {
+        color: #28a745;
+        text-align: center;
+        padding: 20px;
+        font-style: italic;
+    }
+</style>

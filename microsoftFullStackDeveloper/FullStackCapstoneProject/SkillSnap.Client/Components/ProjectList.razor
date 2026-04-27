@@ -1,0 +1,153 @@
+@using SkillSnap.Client.Models
+@inject ProjectService ProjectService
+
+<div class="projects-container">
+    <h2 class="section-title">Projects</h2>
+    
+    @if (IsLoading)
+    {
+        <p class="loading">Loading projects...</p>
+    }
+    else if (Projects == null || Projects.Count == 0)
+    {
+        <p class="no-data">No projects available.</p>
+    }
+    else
+    {
+        <div class="projects-grid">
+            @foreach (var project in Projects)
+            {
+                <div class="project-card">
+                    @if (!string.IsNullOrEmpty(project.ImageUrl))
+                    {
+                        <img src="@project.ImageUrl" alt="@project.Title" class="project-image" />
+                    }
+                    else
+                    {
+                        <div class="project-image-placeholder">
+                            <span>No Image</span>
+                        </div>
+                    }
+                    <div class="project-content">
+                        <h3 class="project-title">@project.Title</h3>
+                        <p class="project-description">@project.Description</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int? UserId { get; set; }
+
+    private List<ProjectDTO>? Projects;
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            IsLoading = true;
+            
+            if (UserId.HasValue)
+            {
+                Projects = await ProjectService.GetProjectsByUserAsync(UserId.Value);
+            }
+            else
+            {
+                Projects = await ProjectService.GetProjectsAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading projects: {ex.Message}");
+            Projects = new List<ProjectDTO>();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}
+
+<style>
+    .projects-container {
+        margin-top: 30px;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #007bff;
+        padding-bottom: 10px;
+    }
+
+    .no-data {
+        color: #999;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+
+    .project-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        background-color: #fff;
+        transition: transform 0.3s ease;
+    }
+
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .project-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .project-image-placeholder {
+        width: 100%;
+        height: 150px;
+        background-color: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+    }
+
+    .project-content {
+        padding: 15px;
+    }
+
+    .project-title {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    .project-description {
+        margin: 0;
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .loading {
+        color: #007bff;
+        text-align: center;
+        padding: 20px;
+        font-style: italic;
+    }
+</style>

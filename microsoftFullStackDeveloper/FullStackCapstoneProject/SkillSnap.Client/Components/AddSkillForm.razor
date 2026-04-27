@@ -1,0 +1,210 @@
+@using SkillSnap.Client.Models
+@inject SkillService SkillService
+
+<div class="add-skill-container">
+    <h3 class="form-title">Add New Skill</h3>
+    
+    @if (ShowForm)
+    {
+        <form @onsubmit="HandleSubmit" class="skill-form">
+            <div class="form-group">
+                <label for="name">Skill Name:</label>
+                <input type="text" id="name" @bind="NewSkill.Name" placeholder="e.g., C#, JavaScript, React" required class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="level">Proficiency Level:</label>
+                <select id="level" @bind="NewSkill.Level" required class="form-control">
+                    <option value="">-- Select Level --</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                    <option value="Expert">Expert</option>
+                </select>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger">@ErrorMessage</div>
+            }
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary" disabled="@IsSubmitting">
+                    @(IsSubmitting ? "Adding..." : "Add Skill")
+                </button>
+                <button type="button" @onclick="() => ShowForm = false" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    }
+    else
+    {
+        <button @onclick="() => ShowForm = true" class="btn btn-primary">+ Add Skill</button>
+    }
+
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <div class="alert alert-success">@SuccessMessage</div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int UserId { get; set; }
+
+    [Parameter]
+    public EventCallback OnSkillAdded { get; set; }
+
+    private SkillDTO NewSkill = new();
+    private bool ShowForm = false;
+    private bool IsSubmitting = false;
+    private string ErrorMessage = string.Empty;
+    private string SuccessMessage = string.Empty;
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            IsSubmitting = true;
+            ErrorMessage = string.Empty;
+            SuccessMessage = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(NewSkill.Name))
+            {
+                ErrorMessage = "Skill name is required.";
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(NewSkill.Level))
+            {
+                ErrorMessage = "Proficiency level is required.";
+                return;
+            }
+
+            NewSkill.PortfolioUserId = UserId;
+            var result = await SkillService.AddSkillAsync(NewSkill);
+
+            if (result != null)
+            {
+                SuccessMessage = $"Skill '{NewSkill.Name}' added successfully!";
+                NewSkill = new();
+                ShowForm = false;
+                await OnSkillAdded.InvokeAsync();
+            }
+            else
+            {
+                ErrorMessage = "Failed to add skill. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+}
+
+<style>
+    .add-skill-container {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .form-title {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    .skill-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .form-control {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-family: inherit;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #28a745;
+        box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-primary {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+        background-color: #218838;
+    }
+
+    .btn-primary:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+        opacity: 0.65;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .alert {
+        padding: 12px 15px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
