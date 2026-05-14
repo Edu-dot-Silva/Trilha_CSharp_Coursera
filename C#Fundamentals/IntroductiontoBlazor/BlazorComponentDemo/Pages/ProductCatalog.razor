@@ -1,0 +1,39 @@
+@page "/product"
+@rendermode InteractiveServer
+
+<PageTitle>Product Catalog</PageTitle>
+
+@if(!string.IsNullOrEmpty(cartMessage)){
+    <div class="error-message">
+        @cartMessage
+        <button type="button" @onclick="ClearCartMessage">Close</button>
+    </div>
+}
+
+<ProductList 
+    Title="Our Products" 
+    Products="@products" 
+    OnAddToCart="HandleAddToCart" />
+
+@code{
+    private string cartMessage = string.Empty;
+
+    private List<Product> products = new List<Product>
+    {
+        new Product { Id = 1, Name = "Laptop", Description = "High performance laptop", Price = 999.99m, ImageUrl = "https://via.placeholder.com/150" },
+        new Product { Id = 2, Name = "Smartphone", Description = "Latest model smartphone", Price = 699.99m, ImageUrl = "https://via.placeholder.com/150" },
+        new Product { Id = 3, Name = "Headphones", Description = "Noise-cancelling headphones", Price = 199.99m, ImageUrl = "https://via.placeholder.com/150" }
+    };
+
+    private void HandleAddToCart(Product product)
+    {
+        cartMessage = $"Added {product.Name} to cart!";
+        StateHasChanged();
+    }
+
+    private void ClearCartMessage()
+    {
+        cartMessage = string.Empty;
+    }
+}
+e
